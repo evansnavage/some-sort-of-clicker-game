@@ -1,37 +1,37 @@
 {
-  "name": "some-sort-of-clicker-game",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "prepare": "husky",
-    "commit": "commit",
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.4.5"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.4.5",
-    "@eslint/eslintrc": "^3",
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
-    "@commitlint/prompt-cli": "^19.8.1",
-    "husky": "^9.1.7",
-    "prettier": "^3.6.2"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  }
+    "name": "some-sort-of-clicker-game",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "prepare": "husky",
+        "commit": "commit",
+        "dev": "next dev --turbopack",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "react": "19.1.0",
+        "react-dom": "19.1.0",
+        "next": "15.4.5"
+    },
+    "devDependencies": {
+        "typescript": "^5",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "15.4.5",
+        "@eslint/eslintrc": "^3",
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
+        "@commitlint/prompt-cli": "^19.8.1",
+        "husky": "^9.1.7",
+        "prettier": "^3.6.2"
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    }
 }
