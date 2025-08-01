@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${sono.variable} ${sono.variable}`}>
+            <body className={sono.variable}>
                 {children}
             </body>
         </html>
