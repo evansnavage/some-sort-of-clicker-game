@@ -1,0 +1,28 @@
+{
+  "name": "some-sort-of-clicker-game",
+  "version": "0.0.0",
+  "description": "Some Sort of Clicker Game",
+  "homepage": "https://github.com/evansnavage/some-sort-of-clicker-game#readme",
+  "bugs": {
+    "url": "https://github.com/evansnavage/some-sort-of-clicker-game/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evansnavage/some-sort-of-clicker-game.git"
+  },
+  "license": "ISC",
+  "author": "Evan Savage",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky",
+    "commit": "commit"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/prompt-cli": "^19.8.1",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.2"
+  }
+}
