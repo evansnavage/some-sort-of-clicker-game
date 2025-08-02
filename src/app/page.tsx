@@ -4,7 +4,7 @@ import styles from './page.module.css'
 import CodeSubmission from '@/components/game/CodeSubmission'
 import Shop from '@/components/game/Shop'
 import { ShopItem, GameState } from '@/types/game'
-import { itemEffects, items } from '@/components/game/Items'
+import { itemEffects, items, costFunctions } from '@/components/game/Items'
 
 export default function Home() {
     const [state, setState] = useState<GameState>({
@@ -86,7 +86,8 @@ export default function Home() {
                         onPurchase={(item) => {
                             setState((prev) => ({
                                 ...prev,
-                                money: prev.money - item.cost,
+                                money:
+                                    prev.money - costFunctions[item.id](state),
                                 items: [...prev.items, item],
                             }))
                         }}
