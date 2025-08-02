@@ -8,26 +8,25 @@ export default function Home() {
     const [requirements, _] = useState([
         {
             Label: 'Must be at least 8 characters long',
+            Unlock: 10,
             Function: (value: string) => value.length >= 8,
         },
         {
             Label: 'Must contain the word "Javascript"',
+            Unlock: 25,
             Function: (value: string) => value.includes('Javascript'),
         },
         {
             Label: 'Must not contain any numbers',
+            Unlock: 50,
             Function: (value: string) => !/\d/.test(value),
         },
     ])
     const [inputValue, setInputValue] = useState('')
     const [isError, setIsError] = useState(false)
+    const activeRequirements = requirements.filter((r) => r.Unlock <= loc)
 
     const handleSubmit = () => {
-        // only run the first x requirement functions where x is the current loc
-        const activeRequirements = requirements.slice(
-            0,
-            Math.min(loc, requirements.length)
-        )
         const allRequirementsMet = activeRequirements.every((req) =>
             req.Function(inputValue)
         )
@@ -68,29 +67,27 @@ export default function Home() {
                     />
                     <div className="p-4 rounded-lg bg-tertiary">
                         <h3 className="font-bold mb-2">Requirements:</h3>
-                        {loc === 0 ? (
+                        {activeRequirements.length == 0 ? (
                             <p className="text-secondary">
                                 Type anything to write your first line of code!
                             </p>
                         ) : (
                             <ul className="list-disc list-inside">
-                                {requirements
-                                    .slice(0, loc)
-                                    .map((req, index) => {
-                                        const isMet = req.Function(inputValue)
-                                        return (
-                                            <li
-                                                key={index}
-                                                className={
-                                                    isMet
-                                                        ? 'text-success'
-                                                        : 'text-error'
-                                                }
-                                            >
-                                                {req.Label}
-                                            </li>
-                                        )
-                                    })}
+                                {activeRequirements.map((req, index) => {
+                                    const isMet = req.Function(inputValue)
+                                    return (
+                                        <li
+                                            key={index}
+                                            className={
+                                                isMet
+                                                    ? 'text-success'
+                                                    : 'text-error'
+                                            }
+                                        >
+                                            {req.Label}
+                                        </li>
+                                    )
+                                })}
                             </ul>
                         )}
                     </div>
