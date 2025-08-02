@@ -4,7 +4,7 @@ import styles from './page.module.css'
 import CodeSubmission from '@/components/game/CodeSubmission'
 import Shop from '@/components/game/Shop'
 import { ShopItem, GameState } from '@/types/game'
-import { itemEffects } from '@/components/game/ItemEffects'
+import { itemEffects, items } from '@/components/game/Items'
 
 export default function Home() {
     const [state, setState] = useState<GameState>({
@@ -44,7 +44,7 @@ export default function Home() {
             lastTick.current = now
 
             setState((prevState) => {
-                const newState = JSON.parse(JSON.stringify(prevState)) // safely clone without functions
+                const newState = JSON.parse(JSON.stringify(prevState))
                 for (const item of newState.items) {
                     const effectFn = itemEffects[item.id]
                     if (effectFn) effectFn(newState, delta)
@@ -62,7 +62,12 @@ export default function Home() {
                 <h1 className="text-2xl font-bold">
                     Some Sort of Clicker Game
                 </h1>
-                <h2 className="text-xl">Lines Written: {state.loc}</h2>
+                <h2 className="text-xl">
+                    Lines Written:{' '}
+                    {state.loc.toLocaleString('en-us', {
+                        maximumFractionDigits: 0,
+                    })}
+                </h2>
                 <h2 className="text-xl">
                     Money:{' '}
                     {state.money.toLocaleString('en-us', {
@@ -77,25 +82,11 @@ export default function Home() {
                 {state.loc >= 25 ? (
                     <Shop
                         state={state}
-                        items={[
-                            {
-                                id: 'sales_friend_free',
-                                name: 'Friend in Sales',
-                                cost: 0,
-                                description:
-                                    'Slowly generates money from your lines.',
-                                limit: 1,
-                                unlocksAt: 25,
-                            },
-                        ]}
-                        purchasedItemIds={state.items.map((item) => item.id)}
+                        items={items}
                         onPurchase={(item) => {
                             setState((prev) => ({
                                 ...prev,
-                                loc: prev.loc - item.cost,
-                            }))
-                            setState((prev) => ({
-                                ...prev,
+                                money: prev.money - item.cost,
                                 items: [...prev.items, item],
                             }))
                         }}
