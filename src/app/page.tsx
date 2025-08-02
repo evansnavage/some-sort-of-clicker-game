@@ -14,22 +14,22 @@ export default function Home() {
     })
     const [requirements, _setRequirements] = useState([
         {
-            Label: 'Must be at least 8 characters long',
-            Unlock: 100,
+            label: 'Must be at least 8 characters long',
+            unlock: 100,
             Function: (value: string) => value.length >= 8,
         },
         {
-            Label: 'Must contain the word "Javascript"',
-            Unlock: 250,
+            label: 'Must contain the word "Javascript"',
+            unlock: 250,
             Function: (value: string) => value.includes('Javascript'),
         },
         {
-            Label: 'Must not contain any numbers',
-            Unlock: 500,
+            label: 'Must not contain any numbers',
+            unlock: 500,
             Function: (value: string) => !/\d/.test(value),
         },
     ])
-    const activeRequirements = requirements.filter((r) => r.Unlock <= state.loc)
+    const activeRequirements = requirements.filter((r) => r.unlock <= state.loc)
 
     const handleSuccess = () => {
         setState((prev) => ({ ...prev, loc: prev.loc + 1 }))
@@ -87,7 +87,7 @@ export default function Home() {
                             setState((prev) => ({
                                 ...prev,
                                 money:
-                                    prev.money - costFunctions[item.id](state),
+                                    prev.money - costFunctions[item.id](prev),
                                 items: [...prev.items, item],
                             }))
                         }}
