@@ -3,7 +3,6 @@ export const items: ShopItem[] = [
     {
         id: 'sales_friend_free',
         name: 'Friend in Sales',
-        cost: 0,
         description: 'Slowly generates money from your lines.',
         limit: 1,
         unlocksAt: 25,
@@ -11,7 +10,6 @@ export const items: ShopItem[] = [
     {
         id: 'ghost_writer_0',
         name: 'Ghost Writer',
-        cost: 5,
         description: 'Slowly Writes Lines for You.',
         limit: 20,
         unlocksAt: 100,
@@ -19,9 +17,14 @@ export const items: ShopItem[] = [
 ]
 export const costFunctions: Record<string, (state: GameState) => number> = {
     sales_friend_free: (state: GameState) => 0,
-    ghost_writer_0: (state: GameState) =>
-        5 +
-        2 * state.items.filter((item) => item.id === 'ghost_writer_0').length,
+    ghost_writer_0: (state: GameState) => {
+        return (
+            5 +
+            2 *
+                state.items.filter((item) => item.id === 'ghost_writer_0')
+                    .length
+        )
+    },
 }
 
 export const itemEffects: Record<

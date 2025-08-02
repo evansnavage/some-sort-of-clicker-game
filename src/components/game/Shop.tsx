@@ -2,6 +2,7 @@
 import React from 'react'
 import Button from '@/components/library/Button'
 import { ShopItem, GameState } from '@/types/game'
+import { costFunctions } from '@/components/game/Items'
 
 interface ShopProps {
     /** The player's current currency (Lines of Code). */
@@ -34,7 +35,8 @@ export default function Shop({ state, items, onPurchase }: ShopProps) {
             <h2>Shop</h2>
             <ul>
                 {items.map((item) => {
-                    const cannotAfford = state.money < item.cost
+                    const cannotAfford =
+                        state.money < costFunctions[item.id](state)
 
                     const unlocked = state.loc >= item.unlocksAt
 
@@ -59,7 +61,8 @@ export default function Shop({ state, items, onPurchase }: ShopProps) {
                                             `(${numberPurchased}/${item.limit})`}
                                     </li>
                                     <small className="text-secondary">
-                                        Cost: ${item.cost}, {item.description}
+                                        Cost: ${costFunctions[item.id](state)},{' '}
+                                        {item.description}
                                     </small>
                                 </div>
                                 <Button

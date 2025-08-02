@@ -1,7 +1,6 @@
 export interface ShopItem {
     id: string
     name: string
-    cost: number
     description: string
     limit?: number
     unlocksAt: number
