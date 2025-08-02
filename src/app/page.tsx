@@ -1,52 +1,60 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from './page.module.css'
-import TextInput from '@/components/library/TextInput'
+import CodeSubmission from '@/components/game/CodeSubmission'
+import Shop from '@/components/game/Shop'
+import { ShopItem, GameState } from '@/types/game'
+import { itemEffects } from '@/components/game/ItemEffects'
 
 export default function Home() {
-    const [loc, setLoc] = useState(0)
-    const [requirements, _] = useState([
+    const [state, setState] = useState<GameState>({
+        loc: 0,
+        money: 0,
+        items: [],
+    })
+    const [requirements, _setRequirements] = useState([
         {
             Label: 'Must be at least 8 characters long',
-            Unlock: 10,
+            Unlock: 100,
             Function: (value: string) => value.length >= 8,
         },
         {
             Label: 'Must contain the word "Javascript"',
-            Unlock: 25,
+            Unlock: 250,
             Function: (value: string) => value.includes('Javascript'),
         },
         {
             Label: 'Must not contain any numbers',
-            Unlock: 50,
+            Unlock: 500,
             Function: (value: string) => !/\d/.test(value),
         },
     ])
-    const [inputValue, setInputValue] = useState('')
-    const [isError, setIsError] = useState(false)
-    const activeRequirements = requirements.filter((r) => r.Unlock <= loc)
+    const activeRequirements = requirements.filter((r) => r.Unlock <= state.loc)
 
-    const handleSubmit = () => {
-        const allRequirementsMet = activeRequirements.every((req) =>
-            req.Function(inputValue)
-        )
-
-        // run the input value through each function from the requirements array
-        if (allRequirementsMet) {
-            setLoc((prevLoc) => prevLoc + 1)
-            setInputValue('') // Clear the input after submit
-        } else {
-            setIsError(true)
-        }
+    const handleSuccess = () => {
+        setState((prev) => ({ ...prev, loc: prev.loc + 1 }))
     }
+    // GAME LOOP
+    const lastTick = useRef(Date.now())
 
     useEffect(() => {
-        if (!isError) return
+        const loop = setInterval(() => {
+            const now = Date.now()
+            const delta = now - lastTick.current
+            lastTick.current = now
 
-        const timeoutId = setTimeout(() => setIsError(false), 820) // Animation duration
+            setState((prevState) => {
+                const newState = JSON.parse(JSON.stringify(prevState)) // safely clone without functions
+                for (const item of newState.items) {
+                    const effectFn = itemEffects[item.id]
+                    if (effectFn) effectFn(newState, delta)
+                }
+                return newState
+            })
+        }, 100)
 
-        return () => clearTimeout(timeoutId)
-    }, [isError])
+        return () => clearInterval(loop)
+    }, [])
 
     return (
         <div className={styles.page}>
@@ -54,44 +62,47 @@ export default function Home() {
                 <h1 className="text-2xl font-bold">
                     Some Sort of Clicker Game
                 </h1>
-                <h2 className="text-xl">Lines Written: {loc}</h2>
-                <div className="flex flex-col gap-4 w-full items-center">
-                    <TextInput
-                        placeholder="Start Typing"
-                        value={inputValue}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setInputValue(e.target.value)
-                        }
-                        onSubmit={handleSubmit}
-                        className={`${isError ? 'animate-shake' : ''}`}
+                <h2 className="text-xl">Lines Written: {state.loc}</h2>
+                <h2 className="text-xl">
+                    Money:{' '}
+                    {state.money.toLocaleString('en-us', {
+                        style: 'currency',
+                        currency: 'USD',
+                    })}
+                </h2>
+                <CodeSubmission
+                    requirements={activeRequirements}
+                    onSuccess={handleSuccess}
+                />
+                {state.loc >= 25 ? (
+                    <Shop
+                        state={state}
+                        items={[
+                            {
+                                id: 'sales_friend_free',
+                                name: 'Friend in Sales',
+                                cost: 0,
+                                description:
+                                    'Slowly generates money from your lines.',
+                                limit: 1,
+                                unlocksAt: 25,
+                            },
+                        ]}
+                        purchasedItemIds={state.items.map((item) => item.id)}
+                        onPurchase={(item) => {
+                            setState((prev) => ({
+                                ...prev,
+                                loc: prev.loc - item.cost,
+                            }))
+                            setState((prev) => ({
+                                ...prev,
+                                items: [...prev.items, item],
+                            }))
+                        }}
                     />
-                    <div className="p-4 rounded-lg bg-tertiary">
-                        <h3 className="font-bold mb-2">Requirements:</h3>
-                        {activeRequirements.length == 0 ? (
-                            <p className="text-secondary">
-                                Type anything to write your first line of code!
-                            </p>
-                        ) : (
-                            <ul className="list-disc list-inside">
-                                {activeRequirements.map((req, index) => {
-                                    const isMet = req.Function(inputValue)
-                                    return (
-                                        <li
-                                            key={index}
-                                            className={
-                                                isMet
-                                                    ? 'text-success'
-                                                    : 'text-error'
-                                            }
-                                        >
-                                            {req.Label}
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        )}
-                    </div>
-                </div>
+                ) : (
+                    ''
+                )}
             </main>
         </div>
     )
