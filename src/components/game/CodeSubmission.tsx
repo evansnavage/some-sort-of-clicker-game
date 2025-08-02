@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import TextInput from '@/components/library/TextInput'
 
 interface Requirement {
-    Label: string
+    label: string
     Function: (value: string) => boolean
 }
 
@@ -68,7 +68,7 @@ export default function CodeSubmission({
                                         isMet ? 'text-success' : 'text-error'
                                     }
                                 >
-                                    {req.Label}
+                                    {req.label}
                                 </li>
                             )
                         })}

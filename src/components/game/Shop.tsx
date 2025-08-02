@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import { useMemo } from 'react'
 import Button from '@/components/library/Button'
 import { ShopItem, GameState } from '@/types/game'
 import { costFunctions } from '@/components/game/Items'
@@ -28,7 +29,10 @@ export default function Shop({ state, items, onPurchase }: ShopProps) {
     const handleBuy = (item: ShopItem) => {
         onPurchase(item)
     }
-    let purchasedItemIds = state.items.map((item) => item.id)
+    const purchasedItemIds = useMemo(
+        () => state.items.map((item) => item.id),
+        [state.items]
+    )
 
     return (
         <div>
@@ -80,6 +84,7 @@ export default function Shop({ state, items, onPurchase }: ShopProps) {
                             </div>
                         )
                     }
+                    return null
                 })}
             </ul>
         </div>
